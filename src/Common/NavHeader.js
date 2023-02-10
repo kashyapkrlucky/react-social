@@ -6,20 +6,13 @@ import { BellIcon } from '@heroicons/react/24/outline';
 import { Link } from "react-router-dom";
 import { UserContext } from '../Contexts/UserContext';
 import { useNavigate } from "react-router-dom";
+import { AuthNavigation, UserNavigation } from '../Utils';
 
-const navigation = [
-    { name: 'Sign Up', url: '/', current: true },
-    { name: 'Sign In', url: '/sign-in', current: false }
-]
-const userNavigation = [
-    { name: 'Your Profile', url: '/me' },
-    { name: 'Settings', url: '/settings' },
-]
+
 
 const navStyle = {
     height: HeightNav,
-    background: '#01050b',
-    color: LightGrey
+    background: '#fafafa'
 }
 
 
@@ -43,7 +36,7 @@ function NavHeader() {
                             </div>
                             {!user.id && <div className="hidden md:block">
                                 <div className="ml-10 flex items-baseline space-x-4">
-                                    {navigation.map((item) => (
+                                    {AuthNavigation.map((item) => (
                                         <div key={item.name}>
                                             <Link to={item.url}>
                                                 {item.name}
@@ -55,22 +48,21 @@ function NavHeader() {
                         </div>
                         {user && user.id && <div className="hidden md:block">
                             <div className="ml-4 flex items-center md:ml-6">
-                                {/* <button
-                                    type="button"
-                                    className="rounded-full p-1 text-gray-400 hover:text-white"
-                                >
-                                    <span className="sr-only">View notifications</span>
-                                    <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                </button> */}
- 
+
+
                                 <Menu as="div" className="relative ml-3">
                                     <div>
                                         <Menu.Button className="flex max-w-xs items-center rounded-full  text-sm">
                                             <span className="sr-only">Open user menu</span>
 
-                                            <p className='block px-4 py-2 text-sm text-white'>
+                                            <p className='block px-4 py-2 text-sm'>
                                                 {user.name}
                                             </p>
+                                            <img
+                                                className="h-8 w-8 rounded-full"
+                                                src={"avatars/" + user.avatar}
+                                                alt="Your Avatar"
+                                            />
                                             {/* <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" /> */}
                                         </Menu.Button>
                                     </div>
@@ -84,14 +76,14 @@ function NavHeader() {
                                         leaveTo="transform opacity-0 scale-95"
                                     >
                                         <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                            {userNavigation.map((item) => (
+                                            {UserNavigation.map((item) => (
                                                 <div key={item.name}>
                                                     <Link to={item.url} className='block px-4 py-2 text-sm text-gray-700'>
                                                         {item.name}
                                                     </Link>
                                                 </div>
                                             ))}
-                                            <p className='block px-4 py-2 text-sm text-gray-700' onClick={() => {setUser({}); logOut();}}>Logout</p>
+                                            <p className='block px-4 py-2 text-sm text-gray-700' onClick={() => { setUser({}); logOut(); }}>Logout</p>
                                         </Menu.Items>
                                     </Transition>
                                 </Menu>

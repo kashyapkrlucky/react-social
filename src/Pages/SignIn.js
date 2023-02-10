@@ -23,7 +23,7 @@ function SignIn() {
 
     const isSubmitDisabled = () => {
         const isEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email));
-        const isPassword = formData.password.length > 5;
+        const isPassword = formData.password.length > 2;
         const isFormValid = isEmail && isPassword;
         setIsBtnDisabled(!isFormValid);
     }
@@ -36,7 +36,6 @@ function SignIn() {
     }
     const navigate = useNavigate();
     const handleSubmit = async () => {
-
         try {
             const response = await HttpClient.post('api/user/sign-in', formData);
             const { data } = await response.data;
@@ -75,7 +74,6 @@ function SignIn() {
                         }
                     </div>
                 </React.Fragment>
-
             )}
         </UserContext.Consumer>
 
