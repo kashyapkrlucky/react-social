@@ -1,6 +1,6 @@
 export const AuthNavigation = [
-    { name: 'Sign Up', url: '/', current: true },
-    { name: 'Sign In', url: '/sign-in', current: false }
+    { name: 'Sign Up', url: '/sign-up', current: true },
+    { name: 'Sign In', url: '/', current: false }
 ];
 
 export const UserNavigation = [

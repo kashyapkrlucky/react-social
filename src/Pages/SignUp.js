@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import NavHeader from '../Common/NavHeader';
+import NavHeader from '../Components/NavHeader';
 import Buttons from '../Common/Buttons';
-import { HeightPage } from '../Common/CardSizes';
+import { PageStyle } from '../Common/CardStyles';
 import Inputs from '../Common/Inputs';
-import { ModalPage } from '../Common/ModalPage';
+import { ModalPage } from '../Components/ModalPage';
 import HttpClient from '../HttpClient';
 
 function SignUp() {
@@ -49,14 +49,14 @@ function SignUp() {
     return (
         <React.Fragment>
             <NavHeader />
-            <div className="flex flex-row justify-center items-center" style={{ height: HeightPage }}>
+            <div className="flex flex-row justify-center items-center" style={PageStyle}>
                 <div className="basis-1/3 mx-auto shadow-xl p-4">
                     <p className="text-xl mb-8">Sign Up</p>
                     <div className='flex flex-col'>
                         <Inputs label="name" value={user.name} type='text' placeholder='Enter your name' onChange={handleChange} />
                         <Inputs label="email" value={user.email} type='email' placeholder='Enter your email' onChange={handleChange} />
                         <Inputs label="password" value={user.password} type='password' placeholder='Enter your password' onChange={handleChange} />
-                        <Buttons text='Register' className='primary' onClick={handleSubmit} isDisabled={isBtnDisabled}></Buttons>
+                        <Buttons text='Register' className='bg-indigo-800 text-white px-8 py-2 radius-4' onClick={handleSubmit} isDisabled={isBtnDisabled}></Buttons>
                     </div>
                 </div>
 

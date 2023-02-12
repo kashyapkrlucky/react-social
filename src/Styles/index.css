@@ -44,13 +44,19 @@ textarea {
     height: 80px;
     resize: none;
 }
-
-.label {
+button {
+    cursor: pointer;
+}
+button[disabled] {
+    opacity: 0.5;
+    cursor: not-allowed;
+} 
+/* .label {
     text-transform: uppercase;
     letter-spacing: 1px;
-}
+} */
 
-button {
+/* /* button {
     padding: 4px 10px;
     color: #323232;
     background: none;
@@ -104,7 +110,7 @@ button.warning-outline {
 button[disabled] {
     opacity: 0.5;
     cursor: not-allowed;
-}
+} */
 
 .overlay-bd {
     position: absolute;
@@ -115,4 +121,9 @@ button[disabled] {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+
+.radius-4 {
+    border-radius: 4px;
 }

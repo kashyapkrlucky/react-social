@@ -1,13 +1,13 @@
-import React, { useState } from 'react'
-import NavHeader from '../Common/NavHeader';
+import React, { useState, useContext } from 'react'
+import NavHeader from '../Components/NavHeader';
 import Buttons from '../Common/Buttons';
-import { HeightPage } from '../Common/CardSizes';
+import { PageStyle } from '../Common/CardStyles';
 import Inputs from '../Common/Inputs';
 import HttpClient from '../HttpClient';
 import { UserContext } from '../Contexts/UserContext';
 import { decodeToken } from "react-jwt";
 import { useNavigate } from "react-router-dom";
-import { ModalPage } from '../Common/ModalPage';
+import { ModalPage } from '../Components/ModalPage';
 
 function SignIn() {
     const [formData, setFormData] = useState({
@@ -20,7 +20,7 @@ function SignIn() {
     });
     const [currentUser, setCurrentUser] = useState({});
     const [isBtnDisabled, setIsBtnDisabled] = useState(true);
-
+    const Context = useContext(UserContext);
     const isSubmitDisabled = () => {
         const isEmail = (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(formData.email));
         const isPassword = formData.password.length > 2;
@@ -40,7 +40,10 @@ function SignIn() {
             const response = await HttpClient.post('api/user/sign-in', formData);
             const { data } = await response.data;
             const userInfo = await decodeToken(data);
-            setCurrentUser(userInfo);
+            console.log(Context);
+            // setCurrentUser(userInfo);
+            await Context.setUser(userInfo);
+            await navigate('/dashboard');
         } catch (error) {
             const { message } = error.response.data
             setMessage({ text: message, type: 'error' });
@@ -51,13 +54,13 @@ function SignIn() {
             {({ user, setUser }) => (
                 <React.Fragment>
                     <NavHeader />
-                    <div className="flex flex-row justify-center items-center" style={{ height: HeightPage }}>
+                    <div className="flex flex-row justify-center items-center" style={PageStyle}>
                         <div className="basis-1/3 mx-auto shadow-xl p-4">
                             <p className="text-xl mb-8">Already have an account, Log in</p>
                             <div className='flex flex-col'>
                                 <Inputs label="email" value={formData.email} type='email' placeholder='Enter your email' onChange={handleChange} />
                                 <Inputs label="password" value={formData.password} type='password' placeholder='Enter your password' onChange={handleChange} />
-                                <Buttons text='Login' className='primary' onClick={() => { handleSubmit(); setUser(currentUser); navigate('/dashboard');}} isDisabled={isBtnDisabled}></Buttons>
+                                <Buttons text='Login' className='bg-indigo-800 text-white px-8 py-2 radius-4' onClick={() => { handleSubmit();}} isDisabled={isBtnDisabled}></Buttons>
                             </div>
                         </div>
                         {
