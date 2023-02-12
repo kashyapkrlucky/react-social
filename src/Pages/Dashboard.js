@@ -6,12 +6,14 @@ import { PageStyle } from '../Common/CardStyles';
 import { UserContext } from '../Contexts/UserContext';
 import HttpClient from '../HttpClient';
 import CreateFeed from '../Components/CreateFeed';
+import ChatBox from '../Components/ChatBox';
 
 function Dashboard() {
     const [posts, setPosts] = useState([]);
     const user = JSON.parse(localStorage.getItem('user'));
     useEffect(() => {
         getFeeds();
+        getFriends();
         return () => { console.log('Clearing Feeds') };
     }, []);
     const getFeeds = async () => {
@@ -37,7 +39,19 @@ function Dashboard() {
             getFeeds();
         }
     }
-    
+
+    const [friends, setFriends] = useState([]);
+    const [requests, setRequests] = useState([]);
+
+    const getFriends = async () => {
+        const response = await HttpClient.get(`api/user/my-connections/all/${user.id}`);
+        const { data } = await response.data;
+        const pending = data.filter(item => item.status === 1 && item.isRequestor === false);
+        const all = data.filter(item => item.status === 2);
+        setRequests(pending);
+        setFriends(all);
+    } 
+
     return (
         <UserContext.Consumer>
             {({ user, setUser }) => (
@@ -49,20 +63,26 @@ function Dashboard() {
                         </div>
                         <div className='columns-auto w-full'>
                             <div className="flex flex-col">
+                                <h3 className='font-bold text-slate-400 text-sm mb-4'>New Updates</h3>
                                 <CreateFeed user={user} onCreateFeed={onCreateFeed} />
                                 {
-                                    posts.map(post => (
-                                        <FeedCard
-                                            key={post._id}
-                                            user={user}
-                                            post={post}
-                                            deleteFeed={deleteFeed}
-                                            updateLike={updateLike} />
-                                    ))
+                                    posts && posts.length > 0
+                                        ? posts.map(post => (
+                                            <FeedCard
+                                                key={post._id}
+                                                user={user}
+                                                post={post}
+                                                deleteFeed={deleteFeed}
+                                                updateLike={updateLike} />
+                                        ))
+                                        : <p className='text-sm text-slate-300 py-4'>
+                                            No posts yet.
+                                        </p>
                                 }
                             </div>
                         </div>
                         <div className='columns-xl'>
+                            <ChatBox friends={friends} requests={requests}/>
                         </div>
                     </div>
                 </React.Fragment>)}

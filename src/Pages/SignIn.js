@@ -18,7 +18,6 @@ function SignIn() {
         text: '',
         type: ''
     });
-    const [currentUser, setCurrentUser] = useState({});
     const [isBtnDisabled, setIsBtnDisabled] = useState(true);
     const Context = useContext(UserContext);
     const isSubmitDisabled = () => {

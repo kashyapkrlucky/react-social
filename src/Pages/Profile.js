@@ -5,6 +5,7 @@ import { UserContext } from '../Contexts/UserContext';
 import HttpClient from '../HttpClient';
 import { useParams } from 'react-router';
 import ConnectionStatus from '../Components/ConnectionStatus';
+import Moment from 'react-moment';
 
 function Profile() {
     let { userId } = useParams();
@@ -53,7 +54,7 @@ function Profile() {
 
                 </div>
                 <div className='columns-auto w-full'>
-                    <div className='flex flex-row'>
+                    <div className='flex flex-row bg-white p-10 shadow-md radius-4 mb-4'>
                         <div className='flex flex-row pr-4'>
                             <img
                                 className={"w-24 w-24 rounded-full "}
@@ -62,19 +63,36 @@ function Profile() {
                             />
                         </div>
                         <div className='flex flex-col gap-2'>
-                            <div>
-                                <h3 className='text-2xl'>{userInfo.name}</h3>
-                            </div>
-                            <div>
-                                {
-                                    (userId && userId !== context.user.id)
-                                        ?
-                                        <ConnectionStatus status={connStatus} addConnection={addConnection} />
-                                        :
-                                        (<p>Me</p>)
-                                }
-                            </div>
+                            <h3 className='text-2xl'>{userInfo.name}</h3>
+                            {
+                                (userId && userId !== context.user.id)
+                                    ?
+                                    <ConnectionStatus status={connStatus} addConnection={addConnection} />
+                                    :
+                                    (<p>Me</p>)
+                            }
+
                         </div>
+                    </div>
+                    <div className='flex flex-col gap-2'>
+                        {
+                            userInfo.posts && userInfo.posts.length > 0
+                                ? (
+                                    userInfo.posts.map(post => (
+                                        <div className='flex flex-col bg-white p-4 shadow-md radius-4' key={post._id}>
+                                            <h3 className='font-medium'>
+                                                {post.description}
+                                            </h3>
+                                            <p className='text-xs text-slate-400'><Moment fromNow>{post.created_at}</Moment></p>
+                                        </div>
+                                    ))
+                                )
+                                : (
+                                    <p className='text-sm text-slate-300 py-4'>
+                                        No posts yet.
+                                    </p>
+                                )
+                        }
                     </div>
                 </div>
                 <div className='columns-xl'>

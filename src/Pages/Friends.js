@@ -7,7 +7,6 @@ import HttpClient from '../HttpClient';
 
 function Friends() {
     const context = useContext(UserContext);
-
     const [friends, setFriends] = useState([]);
 
     const getFriends = async () => {
@@ -39,7 +38,7 @@ function Friends() {
                     <div className='flex flex-col gap-4'>
                         {
                             friends.map(item => (
-                                <div className='flex flex-row justify-between bg-white p-4 shadow-sm' key={item.id}>
+                                <div className='flex flex-row justify-between bg-white p-4 shadow-sm' key={item._id}>
                                     <div className='flex flex-row items-center gap-4'>
                                         <img
                                             className={"w-16 w-16 rounded-full "}
