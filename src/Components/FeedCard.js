@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '../Common/Avatar';
 import { HandThumbUpIcon, ChatBubbleLeftEllipsisIcon } from '@heroicons/react/24/outline';
 import { HandThumbUpIcon as SolidHandThumbUpIcon } from '@heroicons/react/24/solid';
@@ -6,8 +6,12 @@ import Cards from '../Common/Cards';
 import DeleteItem from '../Common/DeleteItem';
 import Moment from 'react-moment';
 import { Link } from 'react-router-dom';
+import Comments from './Comments';
+import { ModalPage } from '../Components/ModalPage';
 
 function FeedCard({ user, post, deleteFeed, updateLike }) {
+  const [isCommentsOpen, setIsCommentsOpen] = useState(false);
+  const [selectedPostId, setSelectedPostId] = useState('');
   const isLiked = (likes) => {
     return likes.findIndex(item => item.likedBy === user.id);
   }
@@ -17,6 +21,10 @@ function FeedCard({ user, post, deleteFeed, updateLike }) {
       post: post._id,
       likedBy: index > -1 ? post.likes[index].likedBy : user.id
     }
+  }
+  const toggleComments = (postId) => {
+    setIsCommentsOpen(true);
+    setSelectedPostId(postId);
   }
   return (
     <Cards className="flex flex-row mb-4 w-full">
@@ -41,14 +49,21 @@ function FeedCard({ user, post, deleteFeed, updateLike }) {
             }
             <p className='text-slate-400'>{post.likes.length}</p>
           </button>
-          <button className="flex flex-row items-center gap-4">
+          <button className="flex flex-row items-center gap-4" onClick={() => toggleComments(post._id)}>
             <ChatBubbleLeftEllipsisIcon className='w-4 text-slate-500' />
             <p className='text-slate-400'>{post.comments.length}</p>
           </button>
         </div>
       </div>
       {
-        (post.createdBy._id === user.id) && <DeleteItem id={post._id} deleteFeed={deleteFeed} />
+        (post.createdBy._id === user.id) &&
+        <DeleteItem id={post._id} deleteFeed={deleteFeed} />
+      }
+      {
+        isCommentsOpen &&
+        <ModalPage>
+          <Comments user={user} selectedPostId={selectedPostId} setIsCommentsOpen={setIsCommentsOpen} />
+        </ModalPage>
       }
     </Cards>
   )

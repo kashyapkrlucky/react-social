@@ -50,7 +50,7 @@ function Dashboard() {
         const all = data.filter(item => item.status === 2);
         setRequests(pending);
         setFriends(all);
-    } 
+    }
 
     return (
         <UserContext.Consumer>
@@ -82,7 +82,7 @@ function Dashboard() {
                             </div>
                         </div>
                         <div className='columns-xl'>
-                            <ChatBox friends={friends} requests={requests}/>
+                            <ChatBox user={user} friends={friends} requests={requests} />
                         </div>
                     </div>
                 </React.Fragment>)}

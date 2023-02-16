@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import socketIO from 'socket.io-client';
+const socket = socketIO.connect('http://localhost:3000');
 
-function ChatBox({ requests, friends }) {
-
+function ChatBox({ user, requests, friends }) {
+    const logout = () => {
+        socket.emit('logout', user.id);
+    }
+    // client-side
+    useEffect(() => {
+        socket.emit('message', user.id);
+        const f = friends.map(f => { return { id: f.id } });
+        socket.emit('friendList', f);
+        socket.on('messageResponse', (data) => console.log(data));
+    }, []);
     return (
         <div className='flex flex-col px-4'>
-            <h3 className='font-bold text-slate-400 text-sm mb-4'>Friend Requests</h3>
-
+            <h3 className='font-bold text-slate-400 text-sm mb-4'>Friend Requests <button onClick={logout}>test</button></h3>
             {
                 requests && requests.length > 0
                     ?

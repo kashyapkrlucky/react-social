@@ -2,8 +2,7 @@ import React from 'react';
 import NavHeader from '../Components/NavHeader';
 import SideMenu from '../Components/SideMenu';
 import { PageStyle } from '../Common/CardStyles';
-import { UserContext } from '../Contexts/UserContext';
-import HttpClient from '../HttpClient';
+import { UserContext } from '../Contexts/UserContext'; 
 
 function Groups() {
     return (
