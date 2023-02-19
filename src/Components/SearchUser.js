@@ -28,7 +28,7 @@ function SearchUser({ onSearch }) {
             <Inputs type='text' placeholder='Search' onChange={(e) => setSrcText(e.target.value)} />
             {
                 (users && users.length > 0) &&
-                <div className='bg-white p-4 shadow-md' style={{ position: 'absolute', width: '250px' }}>
+                <div className='bg-white px-4 shadow-md' style={{ position: 'absolute', width: '250px', top: '52px' }}>
                     {
                         users.map(user => (
                             <div className='flex flex-row' key={user._id}>

@@ -10,22 +10,8 @@ import Profile from './Pages/Profile';
 import Friends from './Pages/Friends';
 import Groups from './Pages/Groups';
 
+const auth = localStorage.getItem('auth') || '';
 const user = JSON.parse(localStorage.getItem('user')) || {};
-
-// const router = createBrowserRouter(
-//     user && user.id ?
-//         [
-//             { path: "/dashboard", element: <Dashboard /> },
-//             { path: "/profile", element: <Profile /> },
-//             { path: "/friends", element: <Friends /> },
-//             { path: "/groups", element: <Groups /> },
-//             { path: "*", element: <PageNotFound /> },
-//         ] : [
-//             { path: "/", element: <SignUp /> },
-//             { path: "/sign-in", element: <SignIn /> },
-//             { path: "*", element: <PageNotFound /> },
-//         ]
-// );
 
 export class App extends Component {
     setUser = (user) => {
@@ -33,7 +19,7 @@ export class App extends Component {
         this.setState({ user });
     }
     router = createBrowserRouter(
-        user && user.id ?
+        auth ?
             [
                 { path: "/", element: <Dashboard /> },
                 { path: "/sign-out", element: <SignIn /> },
@@ -52,6 +38,7 @@ export class App extends Component {
             ]
     );
     state = {
+        id: auth,
         user: user,
         setUser: this.setUser
     }

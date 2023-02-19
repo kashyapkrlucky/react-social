@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import NavHeader from '../Components/NavHeader';
-import FeedCard from '../Components/FeedCard';
-import SideMenu from '../Components/SideMenu';
-import { PageStyle } from '../Common/CardStyles';
+import React, { useState, useEffect, useContext } from 'react';
+import Layout from './Layout';
 import { UserContext } from '../Contexts/UserContext';
 import HttpClient from '../HttpClient';
+import FeedCard from '../Components/FeedCard';
 import CreateFeed from '../Components/CreateFeed';
-import ChatBox from '../Components/ChatBox';
+import ChatPanel from '../Components/ChatPanel';
 
 function Dashboard() {
     const [posts, setPosts] = useState([]);
-    const user = JSON.parse(localStorage.getItem('user'));
+    const [friends, setFriends] = useState([]);
+    const [requests, setRequests] = useState([]);
+    const { id: userId, user } = useContext(UserContext);
     useEffect(() => {
         getFeeds();
         getFriends();
-        return () => { console.log('Clearing Feeds') };
+        return () => { };
     }, []);
     const getFeeds = async () => {
-        const response = await HttpClient.get(`api/post/recent/${user.id}`);
+        const response = await HttpClient.get(`api/post/recent/${userId}`);
         const { data } = await response.data;
         setPosts(data);
     }
@@ -40,11 +40,8 @@ function Dashboard() {
         }
     }
 
-    const [friends, setFriends] = useState([]);
-    const [requests, setRequests] = useState([]);
-
     const getFriends = async () => {
-        const response = await HttpClient.get(`api/user/my-connections/all/${user.id}`);
+        const response = await HttpClient.get(`api/user/my-connections/all/${userId}`);
         const { data } = await response.data;
         const pending = data.filter(item => item.status === 1 && item.isRequestor === false);
         const all = data.filter(item => item.status === 2);
@@ -53,40 +50,31 @@ function Dashboard() {
     }
 
     return (
-        <UserContext.Consumer>
-            {({ user, setUser }) => (
-                <React.Fragment>
-                    <NavHeader />
-                    <div className="flex flex-row min-w-full py-8" style={PageStyle}>
-                        <div className='columns-xl'>
-                            <SideMenu />
-                        </div>
-                        <div className='columns-auto w-full'>
-                            <div className="flex flex-col">
-                                <h3 className='font-bold text-slate-400 text-sm mb-4'>New Updates</h3>
-                                <CreateFeed user={user} onCreateFeed={onCreateFeed} />
-                                {
-                                    posts && posts.length > 0
-                                        ? posts.map(post => (
-                                            <FeedCard
-                                                key={post._id}
-                                                user={user}
-                                                post={post}
-                                                deleteFeed={deleteFeed}
-                                                updateLike={updateLike} />
-                                        ))
-                                        : <p className='text-sm text-slate-300 py-4'>
-                                            No posts yet.
-                                        </p>
-                                }
-                            </div>
-                        </div>
-                        <div className='columns-xl'>
-                            <ChatBox user={user} friends={friends} requests={requests} />
-                        </div>
-                    </div>
-                </React.Fragment>)}
-        </UserContext.Consumer>
+        <Layout>
+            <div className='columns-auto w-full'>
+                <div className="flex flex-col">
+                    <h3 className='text-slate-700 text-sm mb-4'>New Updates</h3>
+                    <CreateFeed user={user} onCreateFeed={onCreateFeed} />
+                    {
+                        posts && posts.length > 0
+                            ? posts.map(post => (
+                                <FeedCard
+                                    key={post._id}
+                                    user={user}
+                                    post={post}
+                                    deleteFeed={deleteFeed}
+                                    updateLike={updateLike} />
+                            ))
+                            : <p className='text-sm text-slate-300 py-4'>
+                                No posts yet.
+                            </p>
+                    }
+                </div>
+            </div>
+            <div className='columns-xl'>
+                <ChatPanel user={user} friends={friends} requests={requests} />
+            </div>
+        </Layout>
     )
 }
 

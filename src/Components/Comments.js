@@ -45,7 +45,7 @@ function Comments({ user, selectedPostId, setIsCommentsOpen }) {
         <div className='flex flex-col w-1/3 bg-white radius-4'>
             <div className='flex flex-row justify-between items-center p-4 border-b-2 border-slate-100'>
                 <h3>Comments</h3>
-                <button className='px-4 py-1' onClick={() => setIsCommentsOpen(false)}>
+                <button className='p-1' onClick={() => setIsCommentsOpen(false)}>
                     <XMarkIcon className='w-6 text-slate-500' />
                 </button>
             </div>
