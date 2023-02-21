@@ -10,17 +10,30 @@ function Dashboard() {
     const [posts, setPosts] = useState([]);
     const [friends, setFriends] = useState([]);
     const [requests, setRequests] = useState([]);
-    const { id: userId, user } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     useEffect(() => {
-        getFeeds();
-        getFriends();
+        if (user.id) {
+            getFeeds();
+            getFriends();
+        }
         return () => { };
-    }, []);
+    }, [user.id]);
+
     const getFeeds = async () => {
-        const response = await HttpClient.get(`api/post/recent/${userId}`);
+        const response = await HttpClient.get(`api/post/recent/${user.id}`);
         const { data } = await response.data;
         setPosts(data);
     }
+
+    const getFriends = async () => {
+        const response = await HttpClient.get(`api/user/my-connections/all/${user.id}`);
+        const { data } = await response.data;
+        const pending = data.filter(item => item.status === 1 && item.isRequestor === false);
+        const all = data.filter(item => item.status === 2);
+        setRequests(pending);
+        setFriends(all);
+    }
+
     const onCreateFeed = async (payload) => {
         const response = await HttpClient.post(`api/post/create`, payload);
         if (response.status) {
@@ -40,14 +53,6 @@ function Dashboard() {
         }
     }
 
-    const getFriends = async () => {
-        const response = await HttpClient.get(`api/user/my-connections/all/${userId}`);
-        const { data } = await response.data;
-        const pending = data.filter(item => item.status === 1 && item.isRequestor === false);
-        const all = data.filter(item => item.status === 2);
-        setRequests(pending);
-        setFriends(all);
-    }
 
     return (
         <Layout>

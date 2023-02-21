@@ -10,10 +10,11 @@ import SearchUser from './SearchUser';
 function NavHeader() {
     const navigate = useNavigate();
 
-    const { id, user, setUser } = useContext(UserContext);
+    const { user, setUser } = useContext(UserContext);
     const logOut = () => {
         setUser({});
-        navigate('/sign-out');
+        localStorage.clear();
+        navigate('/');
     }
 
     return (
@@ -23,9 +24,8 @@ function NavHeader() {
                     <Link to='/'>
                         <img className="h-8 w-8" src="/images/bird.svg" alt="Your Company" />
                     </Link>
-
                     {
-                        !id && <div className="hidden md:block">
+                        user && user.id === '' && <div className="hidden md:block">
                             <div className="ml-10 flex items-baseline space-x-4">
                                 {AuthNavigation.map((item) => (
                                     <div className='pr-4' key={item.name}>
@@ -40,7 +40,7 @@ function NavHeader() {
                 </div>
             </div>
             {
-                id &&
+                user && user.id &&
                 <React.Fragment>
                     <div className='columns-auto w-full'>
                         <div className='flex'>
@@ -90,7 +90,7 @@ function NavHeader() {
                     </div>
                 </React.Fragment>
             }
-        </div>
+        </div >
     )
 }
 

@@ -11,9 +11,6 @@ function CreateFeed({ user, onCreateFeed }) {
         <Cards className="flex flex-row mb-4">
             <Avatar name={user.name} url={user.avatar} />
             <div className="flex flex-col pl-4 w-full">
-                {/* <div className="flex flex-col">
-                    <h3 className='font-medium'>{user.name}</h3>
-                </div> */}
                 <div className="flex flex-col text-slate-500 mb-4">
                     <textarea value={description} placeholder="What's on your mind..." onChange={onChange}></textarea>
                 </div>

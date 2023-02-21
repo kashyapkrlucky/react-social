@@ -13,7 +13,7 @@ function SignIn() {
     const [formData, setFormData] = useState({ email: '', password: '' });
     const [message, setMessage] = useState({ text: '', type: '' });
     const [isBtnDisabled, setIsBtnDisabled] = useState(true);
-    const Context = useContext(UserContext);
+    const { setUser } = useContext(UserContext);
     const navigate = useNavigate();
 
     // Submit Disabled
@@ -31,25 +31,20 @@ function SignIn() {
         });
         isSubmitDisabled();
     }
+
     // Submit
     const handleSubmit = async () => {
         try {
             const response = await HttpClient.post('api/user/sign-in', formData);
             const { data } = await response.data;
             const userInfo = await decodeToken(data);
-            localStorage.setItem('auth', userInfo.id);
-            getUserProfile(userInfo.id);
+            localStorage.setItem('token', data);
+            setUser(userInfo);
+            navigate('/dashboard');
         } catch (error) {
             const { message } = error.response.data;
             setMessage({ text: message, type: 'error' });
         }
-    }
-    // Get user info
-    const getUserProfile = async (id) => {
-        const response = await HttpClient.get(`api/user/profile/${id}`, formData);
-        const { data } = await response.data;
-        await Context.setUser(data);
-        await navigate('/dashboard');
     }
 
     return (
@@ -61,7 +56,7 @@ function SignIn() {
                     <div className='flex flex-col'>
                         <Inputs label="email" value={formData.email} type='email' placeholder='Enter your email' onChange={handleChange} />
                         <Inputs label="password" value={formData.password} type='password' placeholder='Enter your password' onChange={handleChange} />
-                        <Buttons text='Login' className='bg-indigo-800 text-white px-8 py-2 radius-4' onClick={() => { handleSubmit(); }} isDisabled={isBtnDisabled}></Buttons>
+                        <Buttons text='Login' className='bg-indigo-800 text-white px-8 py-2 radius-4' onClick={handleSubmit} isDisabled={isBtnDisabled}></Buttons>
                     </div>
                 </div>
                 {
